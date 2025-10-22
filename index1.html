@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discopolia – Państwo Zenka</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<h1>Witamy w Discopolii!</h1>
+<p>Państwie Zenka Martyniuka – Disco państwo, gdzie każdy dzień to impreza!</p>
+</header>
+<main>
+<section>
+<h2>Mandaty Zenkowe</h2>
+<div class="mandaty" id="mandatBox">🎵 Mandaty Zenkowe: <span id="mandatCount">0</span> 🎵</div>
+</section>
+
+<section>
+<h2>Mapa Discopolii</h2>
+<img src="img/mapa.png" alt="Mapa Discopolii" class="mapa">
+</section>
+
+<section>
+<h2>Minigierka: Złap Zenka!</h2>
+<div id="gameArea">
+<img id="zenek" src="img/zenek.png" alt="Zenek">
+</div>
+<p id="score">Wynik: 0</p>
+<button class="btn" id="startGame">Start!</button>
+</section>
+
+<section id="ranking">
+<h2>Ranking Obywateli</h2>
+<form id="addCitizen">
+<input type="text" id="citizenName" placeholder="Twoje imię" required>
+<select id="citizenTitle">
+<option>Zenkołek</option>
+<option>Disco-Książę</option>
+<option>Super Zenek</option>
+<option>Król Parkietu</option>
+</select>
+<button type="submit" class="add">Dołącz!</button>
+</form>
+<table>
+<thead><tr><th>Imię</th><th>Tytuł</th><th>Mandaty</th></tr></thead>
+<tbody id="citizenTable"></tbody>
+</table>
+</section>
+
+<section id="lawsSection">
+<h2>Ustawy Discopolii</h2>
+<form id="addLaw">
+<input type="text" id="lawName" placeholder="Nazwa ustawy" required>
+<input type="text" id="lawDesc" placeholder="Opis ustawy" required>
+<input type="number" id="lawReq" placeholder="Mandaty wymagane" min="1" required>
+<button type="submit" class="add">Zaproponuj ustawę</button>
+</form>
+<div class="laws" id="lawsList"></div>
+<h3>Zatwierdzone ustawy</h3>
+<div class="laws" id="approvedLaws"></div>
+</section>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+body { margin:0; font-family: 'Arial', sans-serif; background:#111; color:#fff; text-align:center;}
+header { background:linear-gradient(45deg,#ff0066,#ffcc00,#00ffcc); padding:2rem; animation:gradientShift 5s ease infinite; background-size:300% 300%;}
+header h1 { margin:0; font-size:3rem; text-shadow:2px 2px 5px #000; }
+header p { font-size:1.2rem; text-shadow:1px 1px 3px #000; }
+@keyframes gradientShift {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+main { max-width:900px; margin:2rem auto; padding:0 1rem; }
+section { background: rgba(255,255,255,0.05); padding:2rem; margin-bottom:2rem; border-radius:15px; box-shadow:0 0 15px #ff0066; }
+h2 { color:#ffcc00; text-shadow:1px 1px 5px #000; }
+.mandaty { background:#ff0066; padding:1rem; border-radius:10px; font-weight:bold; cursor:pointer; margin:1rem 0; box-shadow:0 0 10px #ff0066; transition:0.2s;}
+.mandaty:hover { transform:scale(1.1); }
+.mapa { max-width:100%; border-radius:15px; box-shadow:0 0 20px #ffcc00; }
+#gameArea { position:relative; width:100%; max-width:500px; height:400px; margin:1rem auto; border:2px solid #ffcc00; border-radius:15px; background:radial-gradient(circle,#222 40%,#111 100%); overflow:hidden; }
+#zenek { position:absolute; width:80px; height:80px; cursor:pointer; display:none; }
+#score { font-size:1.3rem; color:#00ffcc; }
+.btn { background:#ff0066; border:none; color:#fff; padding:10px 20px; border-radius:10px; cursor:pointer; box-shadow:0 0 10px #ff0066; transition:0.3s; }
+.btn:hover { background:#ffcc00; color:#111; }
+#ranking table { margin:0 auto; border-collapse:collapse; color:#fff; }
+#ranking th, #ranking td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.2); }
+input, select { padding:6px; border-radius:6px; border:none; margin:0 5px; }
+button.add { padding:6px 12px; background:#00ffcc; color:black; border-radius:6px; cursor:pointer; }
+button.add:hover { background:#33ffee; }
+.laws { margin-top:1rem; }
+.law { background:rgba(255,255,255,0.05); margin:0.5rem 0; padding:0.5rem; border-radius:8px; text-align:left;}
