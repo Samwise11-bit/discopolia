@@ -121,11 +121,7 @@ function renderApprovedLaws(){
   });
 }
 loadData();
-document.getElementById('resetBtn').addEventListener('click',()=>{
-    if(confirm("Czy na pewno chcesz wyzerować wszystkie dane?")) {
-        localStorage.clear();
-        location.reload();
-    }
-});
+
+
 
 
