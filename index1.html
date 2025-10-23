@@ -206,16 +206,18 @@ button.add:hover { background: #33ffee; }
 
 <section id="ranking">
   <h2>Ranking Obywateli</h2>
-  <form id="addCitizen">
-    <input type="text" id="citizenName" placeholder="Twoje imię" required>
-    <select id="citizenTitle">
-      <option>Zenkołek</option>
-      <option>Disco-Książę</option>
-      <option>Super Zenek</option>
-      <option>Król Parkietu</option>
-    </select>
-    <button type="submit" class="add">Dołącz!</button>
-  </form>
+  <div id="citizenSection">
+    <form id="addCitizen">
+      <input type="text" id="citizenName" placeholder="Twoje imię" required>
+      <select id="citizenTitle">
+        <option>Zenkołek</option>
+        <option>Disco-Książę</option>
+        <option>Super Zenek</option>
+        <option>Król Parkietu</option>
+      </select>
+      <button type="submit" class="add">Dołącz!</button>
+    </form>
+  </div>
   <table>
     <thead><tr><th>Imię</th><th>Tytuł</th><th>Mandaty</th></tr></thead>
     <tbody id="citizenTable"></tbody>
@@ -237,7 +239,6 @@ button.add:hover { background: #33ffee; }
 </main>
 
 <script>
-let globalMandaty=0,score=0,gameActive=false,moveInterval;
 let citizens=[],laws=[],approvedLaws=[];
 const totalMandatyDisplay=document.getElementById('totalMandaty');
 const mandatBox=document.getElementById('mandatBox');
@@ -246,31 +247,61 @@ const gameArea=document.getElementById('gameArea');
 const scoreDisplay=document.getElementById('score');
 const startButton=document.getElementById('startGame');
 const citizenTable=document.getElementById('citizenTable');
+const citizenSection=document.getElementById('citizenSection');
 const lawsList=document.getElementById('lawsList');
 const approvedList=document.getElementById('approvedLaws');
 
+let currentCitizen=null;
+let score=0,gameActive=false,moveInterval;
+
 /* --- LocalStorage --- */
 function loadData(){
-  globalMandaty=parseInt(localStorage.getItem("globalMandaty"))||0;
   citizens=JSON.parse(localStorage.getItem("citizens"))||[];
-  laws=JSON.parse(localStorage.getItem("laws"))||[];
   approvedLaws=JSON.parse(localStorage.getItem("approvedLaws"))||[];
+  laws=JSON.parse(localStorage.getItem("laws"))||[];
+  currentCitizen=JSON.parse(localStorage.getItem("currentCitizen"))||null;
+  if(currentCitizen){ showLoggedCitizen(); }
   updateDisplay(); renderCitizens(); renderLaws(); renderApprovedLaws();
 }
 function saveData(){
-  localStorage.setItem("globalMandaty",globalMandaty);
   localStorage.setItem("citizens",JSON.stringify(citizens));
   localStorage.setItem("laws",JSON.stringify(laws));
   localStorage.setItem("approvedLaws",JSON.stringify(approvedLaws));
+  localStorage.setItem("currentCitizen",JSON.stringify(currentCitizen));
 }
-function updateDisplay(){ totalMandatyDisplay.textContent=globalMandaty; }
 
-/* --- Klikanie Mandatów --- */
+/* --- Licznik globalny --- */
+function totalMandaty(){
+  return citizens.reduce((sum,c)=>sum+c.points,0);
+}
+function updateDisplay(){
+  totalMandatyDisplay.textContent=totalMandaty();
+}
+
+/* --- Klikanie --- */
 mandatBox.addEventListener('click',()=>{
-  globalMandaty++;
-  addPointsToCitizen(1);
-  updateDisplay(); saveData();
+  if(!currentCitizen){ alert("Najpierw zostań obywatelem Discopolii!"); return; }
+  currentCitizen.points++;
+  const index=citizens.findIndex(c=>c.name===currentCitizen.name);
+  if(index>=0) citizens[index]=currentCitizen;
+  renderCitizens(); updateDisplay(); saveData();
 });
+
+/* --- Rejestracja obywatela --- */
+document.getElementById('addCitizen').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(currentCitizen){ alert("Masz już obywatelstwo!"); return; }
+  const name=document.getElementById('citizenName').value.trim();
+  const title=document.getElementById('citizenTitle').value;
+  if(!name) return;
+  const newC={name,title,points:0};
+  citizens.push(newC);
+  currentCitizen=newC;
+  saveData(); renderCitizens(); showLoggedCitizen(); updateDisplay();
+});
+function showLoggedCitizen(){
+  citizenSection.innerHTML=`<p>👑 Jesteś zalogowany jako <strong>${currentCitizen.title} ${currentCitizen.name}</strong></p>`;
+}
 
 /* --- Minigra --- */
 function moveZenek(){
@@ -280,15 +311,18 @@ function moveZenek(){
   zenek.style.top=y+'px';
 }
 zenek.addEventListener('click',()=>{
-  if(!gameActive) return;
+  if(!gameActive||!currentCitizen) return;
   score++;
   scoreDisplay.textContent="Wynik: "+score;
-  globalMandaty++; addPointsToCitizen(1);
-  updateDisplay(); saveData();
+  currentCitizen.points++;
+  const index=citizens.findIndex(c=>c.name===currentCitizen.name);
+  if(index>=0) citizens[index]=currentCitizen;
+  renderCitizens(); updateDisplay(); saveData();
   moveZenek();
 });
 startButton.addEventListener('click',()=>{
   if(gameActive) return;
+  if(!currentCitizen){ alert("Najpierw zostań obywatelem Discopolii!"); return; }
   score=0; scoreDisplay.textContent="Wynik: 0";
   gameActive=true; zenek.style.display="block";
   moveZenek(); moveInterval=setInterval(moveZenek,1000);
@@ -301,25 +335,9 @@ startButton.addEventListener('click',()=>{
 });
 
 /* --- Ranking --- */
-document.getElementById('addCitizen').addEventListener('submit',e=>{
-  e.preventDefault();
-  const name=document.getElementById('citizenName').value.trim();
-  const title=document.getElementById('citizenTitle').value;
-  if(!name) return;
-  if(!citizens.find(c=>c.name===name))
-    citizens.push({name,title,points:0});
-  renderCitizens(); saveData();
-  document.getElementById('citizenName').value="";
-});
-function addPointsToCitizen(pts){
-  if(citizens.length===0) return;
-  const last=citizens[citizens.length-1];
-  last.points+=pts;
-  citizens.sort((a,b)=>b.points-a.points);
-  renderCitizens(); saveData();
-}
 function renderCitizens(){
   citizenTable.innerHTML="";
+  citizens.sort((a,b)=>b.points-a.points);
   citizens.forEach(c=>{
     const row=document.createElement('tr');
     row.innerHTML=`<td>${c.name}</td><td>${c.title}</td><td>${c.points}</td>`;
@@ -346,18 +364,19 @@ function renderLaws(){
     <input type="number" min="1" placeholder="Ilość MZ" id="donate${i}">
     <button class="add">Przekaż mandaty</button>`;
     div.querySelector('button').addEventListener('click',()=>{
+      if(!currentCitizen) return alert("Musisz być obywatelem!");
       const amt=parseInt(document.getElementById('donate'+i).value);
-      if(!amt||citizens.length===0) return alert("Podaj ilość mandatów!");
-      const citizen=citizens[citizens.length-1];
-      if(amt>citizen.points) return alert("Nie masz tyle mandatów!");
-      citizen.points-=amt; globalMandaty-=amt; if(globalMandaty<0) globalMandaty=0;
+      if(!amt) return alert("Podaj ilość mandatów!");
+      if(amt>currentCitizen.points) return alert("Nie masz tyle mandatów!");
+      currentCitizen.points-=amt;
       law.votes+=amt;
       if(law.votes>=law.required){
         approvedLaws.push(law);
         laws=laws.filter(l=>l!==law);
       }
-      renderCitizens(); renderLaws(); renderApprovedLaws();
-      updateDisplay(); saveData();
+      const index=citizens.findIndex(c=>c.name===currentCitizen.name);
+      if(index>=0) citizens[index]=currentCitizen;
+      renderCitizens(); renderLaws(); renderApprovedLaws(); updateDisplay(); saveData();
     });
     lawsList.appendChild(div);
   });
