@@ -6,15 +6,13 @@
 <title>Discopolia – Państwo Zenka</title>
 <style>
 body { margin:0; font-family: 'Arial', sans-serif; background:#111; color:#fff; text-align:center;}
-header { background:linear-gradient(45deg,#ff0066,#ffcc00,#00ffcc); padding:2rem; animation:gradientShift 5s ease infinite; background-size:300% 300%;}
-header h1 { margin:0; font-size:3rem; text-shadow:2px 2px 5px #000; }
-header p { font-size:1.2rem; text-shadow:1px 1px 3px #000; }
+header { background:linear-gradient(45deg,#ff0066,#ffcc00,#00ffcc); padding:2rem; animation:gradientShift 5s ease infinite; background-size:300% 300%; display:flex; align-items:center; justify-content:center; gap:20px; }
+header h1 { margin:0; font-size:2.5rem; text-shadow:2px 2px 5px #000; }
+header img { width:80px; height:80px; border-radius:50%; box-shadow:0 0 10px #ffcc00; }
 @keyframes gradientShift {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 main { max-width:900px; margin:2rem auto; padding:0 1rem; }
 section { background: rgba(255,255,255,0.05); padding:2rem; margin-bottom:2rem; border-radius:15px; box-shadow:0 0 15px #ff0066; }
 h2 { color:#ffcc00; text-shadow:1px 1px 5px #000; }
-.mandaty { background:#ff0066; padding:1rem; border-radius:10px; font-weight:bold; cursor:pointer; margin:1rem 0; box-shadow:0 0 10px #ff0066; transition:0.2s;}
-.mandaty:hover { transform:scale(1.1); }
 .mapa { max-width:100%; border-radius:15px; box-shadow:0 0 20px #ffcc00; }
 #gameArea { position:relative; width:100%; max-width:500px; height:400px; margin:1rem auto; border:2px solid #ffcc00; border-radius:15px; background:radial-gradient(circle,#222 40%,#111 100%); overflow:hidden; }
 #zenek { position:absolute; width:80px; height:80px; cursor:pointer; display:none; }
@@ -28,19 +26,19 @@ button.add { padding:6px 12px; background:#00ffcc; color:black; border-radius:6p
 button.add:hover { background:#33ffee; }
 .laws { margin-top:1rem; }
 .law { background:rgba(255,255,255,0.05); margin:0.5rem 0; padding:0.5rem; border-radius:8px; text-align:left;}
+#mandatBoxFixed { position:fixed; top:10px; left:10px; background:#ff0066; color:#fff; padding:10px 15px; border-radius:10px; font-weight:bold; z-index:999; box-shadow:0 0 10px #ffcc00; cursor:pointer; transition:0.2s; }
+#mandatBoxFixed:hover { transform:scale(1.1); }
 </style>
 </head>
 <body>
 <header>
+<img src="herb.png" alt="Herb Discopolii">
 <h1>Witamy w Discopolii!</h1>
-<p>Państwie Zenka Martyniuka – Disco państwo, gdzie każdy dzień to impreza!</p>
 </header>
-<main>
-<section>
-<h2>Mandaty Zenkowe</h2>
-<div class="mandaty" id="mandatBox">🎵 Mandaty Zenkowe: <span id="mandatCount">0</span> 🎵</div>
-</section>
 
+<div id="mandatBoxFixed">Mandaty Zenkowe: <span id="mandatCount">0</span></div>
+
+<main>
 <section>
 <h2>Mapa Discopolii</h2>
 <img src="mapa.png" alt="Mapa Discopolii" class="mapa">
@@ -86,11 +84,12 @@ button.add:hover { background:#33ffee; }
 <div class="laws" id="approvedLaws"></div>
 </section>
 </main>
+
 <script>
 let globalMandaty=0, boxMandaty=0, score=0, gameActive=false, moveInterval;
 let citizens=[], laws=[], approvedLaws=[];
 const globalCounter=document.getElementById('mandatCount');
-const mandatBox=document.getElementById('mandatBox');
+const mandatBox=document.getElementById('mandatBoxFixed');
 const zenek=document.getElementById('zenek');
 const gameArea=document.getElementById('gameArea');
 const scoreDisplay=document.getElementById('score');
@@ -142,74 +141,4 @@ startButton.addEventListener('click',()=>{
   score=0; scoreDisplay.textContent="Wynik: 0";
   gameActive=true; zenek.style.display="block";
   moveZenek(); moveInterval=setInterval(moveZenek,1000);
-  setTimeout(()=>{ clearInterval(moveInterval); gameActive=false; zenek.style.display="none"; alert("Koniec gry! Wynik: "+score); },15000);
-});
-
-/* --- Ranking --- */
-document.getElementById('addCitizen').addEventListener('submit', e=>{
-  e.preventDefault();
-  const name=document.getElementById('citizenName').value.trim();
-  const title=document.getElementById('citizenTitle').value;
-  if(!name) return;
-  if(!citizens.find(c=>c.name===name)) citizens.push({name,title,points:0});
-  renderCitizens(); saveData(); document.getElementById('citizenName').value="";
-});
-function addPointsToCitizen(pts){
-  if(citizens.length===0) return;
-  const last=citizens[citizens.length-1]; last.points+=pts;
-  citizens.sort((a,b)=>b.points-a.points);
-  renderCitizens(); saveData();
-}
-function renderCitizens(){
-  citizenTable.innerHTML=""; citizens.forEach(c=>{
-    const row=document.createElement('tr');
-    row.innerHTML=`<td>${c.name}</td><td>${c.title}</td><td>${c.points}</td>`;
-    citizenTable.appendChild(row);
-  });
-}
-
-/* --- Ustawy --- */
-document.getElementById('addLaw').addEventListener('submit',e=>{
-  e.preventDefault();
-  const name=document.getElementById('lawName').value.trim();
-  const desc=document.getElementById('lawDesc').value.trim();
-  const req=parseInt(document.getElementById('lawReq').value);
-  if(!name || !desc || !req) return;
-  laws.push({name,desc,votes:0,required:req});
-  renderLaws(); saveData();
-  document.getElementById('lawName').value="";
-  document.getElementById('lawDesc').value="";
-  document.getElementById('lawReq').value="";
-});
-function renderLaws(){
-  lawsList.innerHTML="";
-  laws.forEach((law,i)=>{
-    const div=document.createElement('div'); div.className='law';
-    div.innerHTML=`<strong>${law.name}</strong> (${law.votes}/${law.required} MZ)<br>${law.desc}<br>
-    <input type="number" min="1" placeholder="Ilość MZ" id="donate${i}"> <button class="add">Przekaż mandaty</button>`;
-    div.querySelector('button').addEventListener('click',()=>{
-      const amt=parseInt(document.getElementById('donate'+i).value);
-      if(!amt || citizens.length===0) return alert("Podaj ilość mandatów!");
-      const citizen=citizens[citizens.length-1];
-      if(amt>citizen.points) return alert("Nie masz tyle mandatów!");
-      citizen.points-=amt; boxMandaty-=amt; if(boxMandaty<0) boxMandaty=0;
-      globalMandaty-=amt; if(globalMandaty<0) globalMandaty=0;
-      law.votes+=amt;
-      if(law.votes>=law.required){ approvedLaws.push(law); laws=laws.filter(l=>l!==law);}
-      renderCitizens(); renderLaws(); renderApprovedLaws(); updateCounters(); saveData();
-    });
-    lawsList.appendChild(div);
-  });
-}
-function renderApprovedLaws(){
-  approvedList.innerHTML="";
-  approvedLaws.forEach(law=>{
-    const div=document.createElement('div'); div.className='law';
-    div.innerHTML=`<strong>${law.name}</strong> (${law.votes} MZ)<br>${law.desc}`;
-    approvedList.appendChild(div);
-  });
-}
-loadData();
-</script>
-</body>
-</html>
+  setTimeout(()=>{ clearInterval(moveInterval); gameActive=false; zenek.style.display="none"; alert("Koniec
