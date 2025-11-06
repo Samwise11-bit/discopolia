@@ -481,6 +481,152 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;',
   setInterval(loadGlobal, 5000);         // polling to see other users' changes
   setInterval(()=> { localMandatyEl.textContent = localBox.localMandaty; updateBonusInfo(); }, 900);
 })();
+
+/* ====== KONFIG - Wstaw swoje wartości ====== */
+const BIN_ID = "TWOJ_BIN_ID_TUTAJ";      // np. "6738662cae2c0e4fabc12345"
+const API_KEY = "TWOJ_MASTER_KEY_TUTAJ"; // Master/Secret Key z JSONBin.io
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+/* ====== Funkcje komunikacji z JSONBin ====== */
+async function loadBin(){
+  if(!BIN_ID || !API_KEY) throw new Error("Brak BIN_ID / API_KEY w konfiguracji.");
+  const res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY }});
+  if(!res.ok) throw new Error("Błąd fetch BIN GET: " + (await res.text()));
+  const json = await res.json();
+  return json.record || {};
+}
+
+async function saveBin(obj){
+  if(!BIN_ID || !API_KEY) throw new Error("Brak BIN_ID / API_KEY w konfiguracji.");
+  const res = await fetch(BIN_URL, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Master-Key": API_KEY
+    },
+    body: JSON.stringify(obj)
+  });
+  if(!res.ok) throw new Error("Błąd BIN PUT: " + (await res.text()));
+  return await res.json();
+}
+
+/* read-modify-write helper — zapewnia, że operacje odczytają najnowszy stan */
+async function modifyAndSave(modifierFn){
+  // pobierz aktualny stan
+  const state = await loadBin();
+  // pozwól wywołującemu zmodyfikować obiekt (zmiana in-place)
+  await modifierFn(state);
+  // zapisz i zwróć
+  await saveBin(state);
+  // opcjonalnie zwróć nowy stan
+  return await loadBin();
+}
+
+/* ====== Przykładowe funkcje operacji na stanie ====== */
+
+/* Dodaj obywatela (jeśli nie istnieje) */
+async function addCitizen(name, title){
+  return await modifyAndSave(async (s) => {
+    s.citizens = s.citizens || [];
+    if(!s.citizens.find(c=>c.name === name)){
+      s.citizens.push({ name, title, points: 0 });
+    }
+  });
+}
+
+/* Dodaj mandaty do globalu i opcjonalnie do obywatela */
+async function addMandaty(amount, toCitizenName = null){
+  return await modifyAndSave(async (s) => {
+    s.globalMandaty = (s.globalMandaty || 0) + Number(amount);
+    if(toCitizenName){
+      s.citizens = s.citizens || [];
+      const c = s.citizens.find(x=>x.name === toCitizenName);
+      if(c) c.points = (c.points||0) + Number(amount);
+    }
+  });
+}
+
+/* Zaproponuj ustawę (koszt np. 500 MZ - odejmowanie z konta powinno być wykonane we frontendzie lub przed wywołaniem tej funkcji) */
+async function proposeLaw(name, desc, required = 500, proposerName = null){
+  return await modifyAndSave(async (s) => {
+    s.laws = s.laws || [];
+    s.laws.push({ id: "law_" + Date.now(), name, desc, votes: 0, required: Number(required), proposer: proposerName });
+  });
+}
+
+/* Głosuj/przekaż mandaty na ustawę — amount zabiera z globalMandaty i (opcjonalnie) z obywatela */
+async function voteLaw(lawId, amount, fromCitizenName = null){
+  return await modifyAndSave(async (s) => {
+    amount = Number(amount);
+    s.laws = s.laws || [];
+    s.approvedLaws = s.approvedLaws || [];
+    // odejmij globalnie
+    s.globalMandaty = Math.max(0, (s.globalMandaty||0) - amount);
+    // odejmij z obywatela (jeśli podano)
+    if(fromCitizenName){
+      s.citizens = s.citizens || [];
+      const c = s.citizens.find(x=>x.name === fromCitizenName);
+      if(!c || (c.points||0) < amount) throw new Error("Nie ma wystarczająco punktów u obywatela.");
+      c.points = Math.max(0, (c.points||0) - amount);
+    }
+    // znajdź ustawę
+    const law = s.laws.find(l=>l.id === lawId);
+    if(!law) throw new Error("Nie znaleziono ustawy.");
+    law.votes = (law.votes||0) + amount;
+    if(law.votes >= law.required){
+      // zatwierdź
+      s.approvedLaws = s.approvedLaws || [];
+      s.approvedLaws.push(law);
+      s.laws = s.laws.filter(l=>l.id !== lawId);
+    }
+  });
+}
+
+/* Kup przedmiot ze sklepu (przykład: zapis do shopState) */
+async function buyShopItem(itemId, buyerName = null, itemData = {}){
+  /* itemData może zawierać: type,multiplier,duration itp. */
+  return await modifyAndSave(async (s) => {
+    s.shopState = s.shopState || { hasCrown:false, activeBonuses:[] };
+    // jeśli korona
+    if(itemData.type === 'perm' && itemId === 'crown'){
+      s.shopState.hasCrown = true;
+    } else {
+      s.shopState.activeBonuses = (s.shopState.activeBonuses || []).filter(b=>b.id !== itemId);
+      s.shopState.activeBonuses.push(Object.assign({}, {
+        id: itemId,
+        type: itemData.type || 'mult',
+        multiplier: itemData.multiplier || 1,
+        duration: itemData.duration || 30000,
+        expiresAt: Date.now() + (itemData.duration || 30000),
+        owner: buyerName || null
+      }, itemData));
+    }
+    // opcjonalnie odejmij koszt od globalMandaty lub od kupującego w logice wywołującej
+  });
+}
+
+/* ====== Przykład użycia ====== */
+/* (użyj w konsoli lub we frontendzie)
+(async () => {
+  // 1. Załaduj aktualny stan:
+  const state = await loadBin();
+  console.log("stan:", state);
+
+  // 2. Dodaj obywatela:
+  await addCitizen("Zenek", "Król Parkietu");
+
+  // 3. Dodaj 10 mandatów do Zenka:
+  await addMandaty(10, "Zenek");
+
+  // 4. Zaproponuj ustawę:
+  await proposeLaw("Zakaz łączenia disco i metalu", "Szczegóły...", 500, "Zenek");
+
+  // 5. Oddaj 50 mandatów na ustawę (trzeba znać jej id z state.laws):
+  // await voteLaw("law_...", 50, "Zenek");
+})();
+*/
+
 </script>
 </body>
 </html>
+
