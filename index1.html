@@ -1,368 +1,218 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Discopolia – Państwo Zenka</title>
-<style>
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: radial-gradient(circle at top, #25003a, #000);
-  color: #fff;
-  text-align: center;
-  overflow-x: hidden;
-}
-
-header {
-  background: linear-gradient(45deg, #ff00cc, #3333ff, #ffcc00);
-  background-size: 300% 300%;
-  animation: gradientMove 6s ease infinite;
-  padding: 2rem;
-  position: relative;
-  box-shadow: 0 0 20px #ff00cc;
-}
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-header img {
-  width: 120px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-}
-
-header h1 {
-  font-size: 3rem;
-  margin: 0;
-  text-shadow: 3px 3px 8px #000;
-}
-
-header p {
-  font-size: 1.2rem;
-  margin-top: 0.5rem;
-  color: #ffeb99;
-}
-
-#totalMandatyBox {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  background: rgba(255, 0, 204, 0.8);
-  padding: 10px 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px #ff00cc;
-  font-weight: bold;
-  font-size: 1.1rem;
-  z-index: 9999;
-}
-
-main {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-section {
-  background: rgba(255,255,255,0.05);
-  padding: 2rem;
-  margin-bottom: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 0 20px #ff00cc;
-}
-
-h2 {
-  color: #ffcc00;
-  text-shadow: 0 0 10px #ffcc00;
-}
-
-/* Klikacz */
-#mandatBox {
-  background: linear-gradient(135deg, #ff0099, #ff6600);
-  border-radius: 20px;
-  padding: 2rem;
-  margin: 1.5rem auto;
-  max-width: 300px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 0 20px #ff00cc;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-#mandatBox:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 30px #ffcc00;
-}
-
-/* Minigra */
-#gameArea {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  height: 400px;
-  margin: 1rem auto;
-  border: 2px solid #ffcc00;
-  border-radius: 15px;
-  background: radial-gradient(circle, #222 40%, #111 100%);
-  overflow: hidden;
-}
-
-#zenek {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  cursor: pointer;
-  display: none;
-}
-
-#score {
-  font-size: 1.3rem;
-  color: #00ffcc;
-}
-
-/* Sklep */
-.shop-item {
-  background: rgba(255,255,255,0.05);
-  margin: 0.5rem 0;
-  padding: 1rem;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 0 10px #ff00cc;
-}
-.shop-item button {
-  background: #ff0066;
-  border: none;
-  color: white;
-  padding: 8px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.shop-item button:hover { background: #ffcc00; color: #111; }
-
-/* Bonus licznik */
-#bonusTimer {
-  margin-top: 1rem;
-  color: #00ffcc;
-  font-weight: bold;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Discopolia - Mandaty Zenkowe</title>
+  <style>
+    body { margin:0; font-family:'Arial',sans-serif; background:#111; color:#fff; text-align:center;}
+    header { background:linear-gradient(45deg,#ff0066,#ffcc00,#00ffcc); padding:2rem; animation:gradientShift 5s ease infinite; background-size:300% 300%;}
+    header h1 { margin:0; font-size:3rem; text-shadow:2px 2px 5px #000;}
+    header p { font-size:1.2rem; text-shadow:1px 1px 3px #000;}
+    @keyframes gradientShift {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    main { max-width:900px; margin:2rem auto; padding:0 1rem;}
+    section { background:rgba(255,255,255,0.05); padding:2rem; margin-bottom:2rem; border-radius:15px; box-shadow:0 0 15px #ff0066;}
+    h2 { color:#ffcc00; text-shadow:1px 1px 5px #000;}
+    .mandaty { background:#ff0066; padding:1rem; border-radius:10px; font-weight:bold; cursor:pointer; margin:1rem 0; box-shadow:0 0 10px #ff0066; transition:0.2s;}
+    .mandaty:hover { transform:scale(1.1);}
+    .mapa { max-width:100%; border-radius:15px; box-shadow:0 0 20px #ffcc00;}
+    #gameArea { position:relative; width:100%; max-width:500px; height:400px; margin:1rem auto; border:2px solid #ffcc00; border-radius:15px; background:radial-gradient(circle,#222 40%,#111 100%); overflow:hidden;}
+    #zenek { position:absolute; width:80px; height:80px; cursor:pointer; display:none;}
+    #score { font-size:1.3rem; color:#00ffcc;}
+    .btn { background:#ff0066; border:none; color:#fff; padding:10px 20px; border-radius:10px; cursor:pointer; box-shadow:0 0 10px #ff0066; transition:0.3s;}
+    .btn:hover { background:#ffcc00; color:#111;}
+    input, select { padding:6px; border-radius:6px; border:none; margin:0 5px;}
+    button.add { padding:6px 12px; background:#00ffcc; color:black; border-radius:6px; cursor:pointer;}
+    button.add:hover { background:#33ffee;}
+    .law { background:rgba(255,255,255,0.05); margin:0.5rem 0; padding:0.5rem; border-radius:8px; text-align:left;}
+  </style>
 </head>
 <body>
-<header>
-  <img src="herb.png" alt="Herb Discopolii">
-  <h1>Witamy w Discopolii!</h1>
-  <p>Państwo Zenka Martyniuka – gdzie każda noc to koncert!</p>
-</header>
+  <header>
+    <h1>Discopolia</h1>
+    <p>Państwo mandatu i rytmu 🎶</p>
+  </header>
 
-<div id="totalMandatyBox">💰 Łącznie Mandatów: <span id="totalMandaty">0</span> MZ</div>
+  <main>
+    <section>
+      <h2>💸 Mandaty Zenkowe</h2>
+      <div id="mandatBox" class="mandaty">Kliknij, aby zdobyć mandat!</div>
+      <p>Twoje mandaty: <span id="mandatCount">0</span> MZ</p>
+      <p id="bonusInfo" style="color:#00ffcc; font-weight:bold;">Brak aktywnego bonusu</p>
+    </section>
 
-<main>
-<section>
-  <h2>Mandaty Zenkowe</h2>
-  <div id="mandatBox">🎵 Kliknij, by zdobywać Mandaty Zenkowe!</div>
-</section>
+    <section>
+      <h2>🎮 Gra: Złap Zenka!</h2>
+      <p id="score">Wynik: 0</p>
+      <button id="startGame" class="btn">Start</button>
+      <div id="gameArea">
+        <img src="zenek.png" id="zenek" alt="Zenek Martyniuk">
+      </div>
+    </section>
 
-<section>
-  <h2>Sklep z ulepszeniami</h2>
-  <div id="shop"></div>
-  <p id="bonusTimer">Brak aktywnego bonusu</p>
-</section>
+    <section>
+      <h2>🛒 Sklep Zenka</h2>
+      <div id="shopItems"></div>
+    </section>
+  </main>
 
-<section>
-  <h2>Minigierka: Złap Zenka!</h2>
-  <div id="gameArea">
-    <img id="zenek" src="zenek.png" alt="Zenek">
-  </div>
-  <p id="score">Wynik: 0</p>
-  <button class="btn" id="startGame">Start!</button>
-</section>
-</main>
+  <script>
+    let globalMandaty=0, boxMandaty=0, score=0, gameActive=false, moveInterval;
+    const globalCounter=document.getElementById('mandatCount');
+    const mandatBox=document.getElementById('mandatBox');
+    const zenek=document.getElementById('zenek');
+    const gameArea=document.getElementById('gameArea');
+    const scoreDisplay=document.getElementById('score');
+    const startButton=document.getElementById('startGame');
 
-<script>
-let citizens=[], currentCitizen=null, bonusTime=0, bonusActive=false, bonusInterval;
-let totalMandaty=0, clickValue=1;
+    function loadData(){
+      globalMandaty=parseInt(localStorage.getItem("globalMandaty"))||0;
+      boxMandaty=parseInt(localStorage.getItem("boxMandaty"))||0;
+      updateCounters();
+    }
+    function saveData(){
+      localStorage.setItem("globalMandaty",globalMandaty);
+      localStorage.setItem("boxMandaty",boxMandaty);
+    }
+    function updateCounters(){ globalCounter.textContent=boxMandaty; }
 
-const totalMandatyDisplay=document.getElementById('totalMandaty');
-const mandatBox=document.getElementById('mandatBox');
-const shopDiv=document.getElementById('shop');
-const bonusTimer=document.getElementById('bonusTimer');
-
-/* --- SKLEP ZENKA --- */
-const shopItems = [
-  { id: 1, name: "🎤 Złoty Mikrofon Zenka", price: 50, desc: "Kliknięcie daje x2 mandatów przez 30 sekund", duration: 30000, effect: "x2" },
-  { id: 2, name: "🧃 Napój Disco-Energy", price: 100, desc: "Auto-klikanie co sekundę przez 30 sekund", duration: 30000, effect: "auto" },
-  { id: 3, name: "🚗 Zenkomobil Turbo", price: 250, desc: "Kliknięcie daje x3 mandatów przez 45 sekund", duration: 45000, effect: "x3" },
-  { id: 4, name: "👑 Korona Parkietu", price: 1000, desc: "Stały bonus +1 MZ do każdego kliknięcia", duration: 0, effect: "permanent" }
-];
-
-let activeBonus = 1;
-let bonusTimer = null;
-let autoClickInterval = null;
-let hasCrown = localStorage.getItem("hasCrown") === "true";
-let crownBonus = hasCrown ? 1 : 0;
-
-function renderShop() {
-  const shopDiv = document.getElementById("shopItems");
-  shopDiv.innerHTML = "";
-  shopItems.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "law";
-    div.innerHTML = `
-      <strong>${item.name}</strong> - ${item.price} MZ<br>
-      ${item.desc}<br>
-      <button class="add" id="buy${item.id}">Kup</button>
-      <span id="timer${item.id}" style="margin-left:10px;color:#00ffcc;"></span>
-    `;
-    div.querySelector("button").addEventListener("click", () => buyItem(item));
-    shopDiv.appendChild(div);
-  });
-}
-
-function buyItem(item) {
-  if (boxMandaty < item.price) return alert("Nie masz wystarczająco mandatów!");
-  boxMandaty -= item.price;
-  globalMandaty -= item.price;
-  updateCounters();
-  saveData();
-
-  const timerSpan = document.getElementById(`timer${item.id}`);
-
-  if (item.effect === "x2" || item.effect === "x3") {
-    const multiplier = item.effect === "x2" ? 2 : 3;
-    activeBonus = multiplier;
-    let timeLeft = item.duration / 1000;
-
-    clearInterval(bonusTimer);
-    timerSpan.textContent = `Bonus x${multiplier} aktywny (${timeLeft}s)`;
-    bonusTimer = setInterval(() => {
-      timeLeft--;
-      if (timeLeft > 0) {
-        timerSpan.textContent = `Bonus x${multiplier} (${timeLeft}s)`;
-      } else {
-        clearInterval(bonusTimer);
-        timerSpan.textContent = "Bonus wygasł";
-        activeBonus = 1; // reset mnożnika po czasie
-        updateBonusDisplay();
-      }
-    }, 1000);
-    updateBonusDisplay();
-
-  } else if (item.effect === "auto") {
-    if (autoClickInterval) clearInterval(autoClickInterval);
-    let timeLeft = item.duration / 1000;
-    timerSpan.textContent = `Auto klikanie (${timeLeft}s)`;
-    autoClickInterval = setInterval(() => {
-      boxMandaty += 1 * (activeBonus + crownBonus);
-      globalMandaty += 1 * (activeBonus + crownBonus);
+    /* --- Kliknięcie --- */
+    mandatBox.addEventListener('click',()=>{
+      const bonus = activeBonus + crownBonus;
+      boxMandaty += bonus;
+      globalMandaty += bonus;
       updateCounters();
       saveData();
-      timeLeft--;
-      if (timeLeft > 0) timerSpan.textContent = `Auto klikanie (${timeLeft}s)`;
-      else {
-        clearInterval(autoClickInterval);
-        timerSpan.textContent = "Auto klik wygasł";
-      }
-    }, 1000);
-
-  } else if (item.effect === "permanent") {
-    if (hasCrown) return alert("Masz już koronę Parkietu!");
-    hasCrown = true;
-    crownBonus = 1;
-    localStorage.setItem("hasCrown", "true");
-    alert("Korona Parkietu aktywna! Stały bonus +1 MZ do każdego kliknięcia!");
-    updateBonusDisplay();
-  }
-}
-
-/* --- Kliknięcie z bonusami --- */
-mandatBox.addEventListener('click', () => {
-  const bonus = activeBonus + crownBonus;
-  boxMandaty += bonus;
-  globalMandaty += bonus;
-  updateCounters();
-  addPointsToCitizen(bonus);
-  saveData();
-});
-
-/* --- Pomocnicza funkcja --- */
-function updateBonusDisplay() {
-  const bonusDisplay = document.getElementById("bonusInfo");
-  if (!bonusDisplay) return;
-  if (activeBonus > 1)
-    bonusDisplay.textContent = `🔥 Aktywny bonus: x${activeBonus} (${crownBonus ? "+ korona" : ""})`;
-  else if (crownBonus)
-    bonusDisplay.textContent = `👑 Stały bonus korony: +1 MZ`;
-  else
-    bonusDisplay.textContent = `Brak aktywnego bonusu`;
-}
-
-/* --- Start sklepu --- */
-renderShop();
-updateBonusDisplay();
-  shopDiv.innerHTML="";
-  shopItems.forEach((item,i)=>{
-    const div=document.createElement('div');
-    div.className="shop-item";
-    div.innerHTML=`<div><strong>${item.name}</strong><br>${item.desc}<br><small>${item.cost} MZ</small></div>
-                   <button>Kup</button>`;
-    div.querySelector("button").addEventListener("click",()=>{
-      if(totalMandaty<item.cost){ alert("Za mało mandatów!"); return; }
-      totalMandaty-=item.cost;
-      totalMandatyDisplay.textContent=totalMandaty;
-      item.effect();
-      alert("Kupiono: "+item.name);
-      saveData();
     });
-    shopDiv.appendChild(div);
-  });
-}
 
-/* Klikanie */
-mandatBox.addEventListener("click",()=>{
-  totalMandaty+=clickValue;
-  totalMandatyDisplay.textContent=totalMandaty;
-  saveData();
-});
-
-/* Bonus czasowy */
-function activateBonus(duration, multiplier){
-  if(bonusActive) return alert("Bonus już aktywny!");
-  bonusActive=true;
-  const oldClick=clickValue;
-  clickValue*=multiplier;
-  bonusTime=duration;
-  bonusTimer.textContent="Bonus aktywny przez "+bonusTime+"s";
-  bonusInterval=setInterval(()=>{
-    bonusTime--;
-    bonusTimer.textContent="Bonus aktywny przez "+bonusTime+"s";
-    if(bonusTime<=0){
-      clearInterval(bonusInterval);
-      bonusActive=false;
-      clickValue=oldClick;
-      bonusTimer.textContent="Brak aktywnego bonusu";
+    /* --- Minigra --- */
+    function moveZenek(){
+      const x=Math.random()*(gameArea.clientWidth-zenek.clientWidth);
+      const y=Math.random()*(gameArea.clientHeight-zenek.clientHeight);
+      zenek.style.left=x+'px'; zenek.style.top=y+'px';
     }
-  },1000);
-}
+    zenek.addEventListener('click',()=>{
+      if(!gameActive) return;
+      score++; scoreDisplay.textContent="Wynik: "+score;
+      const bonus = activeBonus + crownBonus;
+      boxMandaty += bonus;
+      globalMandaty += bonus;
+      updateCounters();
+      saveData();
+      moveZenek();
+    });
+    startButton.addEventListener('click',()=>{
+      if(gameActive) return;
+      score=0; scoreDisplay.textContent="Wynik: 0";
+      gameActive=true; zenek.style.display="block";
+      moveZenek(); moveInterval=setInterval(moveZenek,1000);
+      setTimeout(()=>{
+        clearInterval(moveInterval);
+        gameActive=false; zenek.style.display="none";
+        alert("Koniec gry! Wynik: "+score);
+      },15000);
+    });
 
-/* Zapisywanie */
-function saveData(){
-  localStorage.setItem("totalMandaty",totalMandaty);
-  localStorage.setItem("clickValue",clickValue);
-}
-function loadData(){
-  totalMandaty=parseInt(localStorage.getItem("totalMandaty"))||0;
-  clickValue=parseInt(localStorage.getItem("clickValue"))||1;
-  totalMandatyDisplay.textContent=totalMandaty;
-}
-loadData();
-renderShop();
-</script>
+    /* --- SKLEP ZENKA --- */
+    const shopItems = [
+      { id: 1, name: "🎤 Złoty Mikrofon Zenka", price: 50, desc: "Kliknięcie daje x2 mandatów przez 30 sekund", duration: 30000, effect: "x2" },
+      { id: 2, name: "🧃 Napój Disco-Energy", price: 100, desc: "Auto-klikanie co sekundę przez 30 sekund", duration: 30000, effect: "auto" },
+      { id: 3, name: "🚗 Zenkomobil Turbo", price: 250, desc: "Kliknięcie daje x3 mandatów przez 45 sekund", duration: 45000, effect: "x3" },
+      { id: 4, name: "👑 Korona Parkietu", price: 1000, desc: "Stały bonus +1 MZ do każdego kliknięcia", duration: 0, effect: "permanent" }
+    ];
+
+    let activeBonus = 1;
+    let bonusTimer = null;
+    let autoClickInterval = null;
+    let hasCrown = localStorage.getItem("hasCrown") === "true";
+    let crownBonus = hasCrown ? 1 : 0;
+
+    function renderShop() {
+      const shopDiv = document.getElementById("shopItems");
+      shopDiv.innerHTML = "";
+      shopItems.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "law";
+        div.innerHTML = `
+          <strong>${item.name}</strong> - ${item.price} MZ<br>
+          ${item.desc}<br>
+          <button class="add" id="buy${item.id}">Kup</button>
+          <span id="timer${item.id}" style="margin-left:10px;color:#00ffcc;"></span>
+        `;
+        div.querySelector("button").addEventListener("click", () => buyItem(item));
+        shopDiv.appendChild(div);
+      });
+    }
+
+    function buyItem(item) {
+      if (boxMandaty < item.price) return alert("Nie masz wystarczająco mandatów!");
+      boxMandaty -= item.price;
+      globalMandaty -= item.price;
+      updateCounters();
+      saveData();
+
+      const timerSpan = document.getElementById(`timer${item.id}`);
+
+      if (item.effect === "x2" || item.effect === "x3") {
+        const multiplier = item.effect === "x2" ? 2 : 3;
+        activeBonus = multiplier;
+        let timeLeft = item.duration / 1000;
+
+        clearInterval(bonusTimer);
+        timerSpan.textContent = `Bonus x${multiplier} aktywny (${timeLeft}s)`;
+        bonusTimer = setInterval(() => {
+          timeLeft--;
+          if (timeLeft > 0) {
+            timerSpan.textContent = `Bonus x${multiplier} (${timeLeft}s)`;
+          } else {
+            clearInterval(bonusTimer);
+            timerSpan.textContent = "Bonus wygasł";
+            activeBonus = 1; 
+            updateBonusDisplay();
+          }
+        }, 1000);
+        updateBonusDisplay();
+
+      } else if (item.effect === "auto") {
+        if (autoClickInterval) clearInterval(autoClickInterval);
+        let timeLeft = item.duration / 1000;
+        timerSpan.textContent = `Auto klikanie (${timeLeft}s)`;
+        autoClickInterval = setInterval(() => {
+          boxMandaty += 1 * (activeBonus + crownBonus);
+          globalMandaty += 1 * (activeBonus + crownBonus);
+          updateCounters();
+          saveData();
+          timeLeft--;
+          if (timeLeft > 0) timerSpan.textContent = `Auto klikanie (${timeLeft}s)`;
+          else {
+            clearInterval(autoClickInterval);
+            timerSpan.textContent = "Auto klik wygasł";
+          }
+        }, 1000);
+
+      } else if (item.effect === "permanent") {
+        if (hasCrown) return alert("Masz już koronę Parkietu!");
+        hasCrown = true;
+        crownBonus = 1;
+        localStorage.setItem("hasCrown", "true");
+        alert("Korona Parkietu aktywna! Stały bonus +1 MZ do każdego kliknięcia!");
+        updateBonusDisplay();
+      }
+    }
+
+    function updateBonusDisplay() {
+      const bonusDisplay = document.getElementById("bonusInfo");
+      if (!bonusDisplay) return;
+      if (activeBonus > 1)
+        bonusDisplay.textContent = `🔥 Aktywny bonus: x${activeBonus} (${crownBonus ? "+ korona" : ""})`;
+      else if (crownBonus)
+        bonusDisplay.textContent = `👑 Stały bonus korony: +1 MZ`;
+      else
+        bonusDisplay.textContent = `Brak aktywnego bonusu`;
+    }
+
+    renderShop();
+    loadData();
+    updateBonusDisplay();
+  </script>
 </body>
 </html>
-
-
