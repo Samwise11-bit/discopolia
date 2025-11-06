@@ -192,16 +192,118 @@ const mandatBox=document.getElementById('mandatBox');
 const shopDiv=document.getElementById('shop');
 const bonusTimer=document.getElementById('bonusTimer');
 
-/* Sklep z ulepszeniami */
-const shopItems=[
-  {name:"Złoty Mikrofon", desc:"Kliknięcia dają +1 mandat", cost:50, effect:()=>clickValue++},
-  {name:"Napój Disco-Energy", desc:"Zwiększa zarobek o 50% przez 1 minutę", cost:100, effect:()=>activateBonus(60,1.5)},
-  {name:"Zenkomobil", desc:"Podwaja zarobek z kliknięć na 2 minuty", cost:300, effect:()=>activateBonus(120,2)},
-  {name:"Korona Króla Parkietu", desc:"Potraja zarobek z kliknięć przez 5 minut", cost:800, effect:()=>activateBonus(300,3)},
+/* --- SKLEP ZENKA --- */
+const shopItems = [
+  { id: 1, name: "🎤 Złoty Mikrofon Zenka", price: 50, desc: "Kliknięcie daje x2 mandatów przez 30 sekund", duration: 30000, effect: "x2" },
+  { id: 2, name: "🧃 Napój Disco-Energy", price: 100, desc: "Auto-klikanie co sekundę przez 30 sekund", duration: 30000, effect: "auto" },
+  { id: 3, name: "🚗 Zenkomobil Turbo", price: 250, desc: "Kliknięcie daje x3 mandatów przez 45 sekund", duration: 45000, effect: "x3" },
+  { id: 4, name: "👑 Korona Parkietu", price: 1000, desc: "Stały bonus +1 MZ do każdego kliknięcia", duration: 0, effect: "permanent" }
 ];
 
-/* Wyświetlanie sklepu */
-function renderShop(){
+let activeBonus = 1;
+let bonusTimer = null;
+let autoClickInterval = null;
+let hasCrown = localStorage.getItem("hasCrown") === "true";
+let crownBonus = hasCrown ? 1 : 0;
+
+function renderShop() {
+  const shopDiv = document.getElementById("shopItems");
+  shopDiv.innerHTML = "";
+  shopItems.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "law";
+    div.innerHTML = `
+      <strong>${item.name}</strong> - ${item.price} MZ<br>
+      ${item.desc}<br>
+      <button class="add" id="buy${item.id}">Kup</button>
+      <span id="timer${item.id}" style="margin-left:10px;color:#00ffcc;"></span>
+    `;
+    div.querySelector("button").addEventListener("click", () => buyItem(item));
+    shopDiv.appendChild(div);
+  });
+}
+
+function buyItem(item) {
+  if (boxMandaty < item.price) return alert("Nie masz wystarczająco mandatów!");
+  boxMandaty -= item.price;
+  globalMandaty -= item.price;
+  updateCounters();
+  saveData();
+
+  const timerSpan = document.getElementById(`timer${item.id}`);
+
+  if (item.effect === "x2" || item.effect === "x3") {
+    const multiplier = item.effect === "x2" ? 2 : 3;
+    activeBonus = multiplier;
+    let timeLeft = item.duration / 1000;
+
+    clearInterval(bonusTimer);
+    timerSpan.textContent = `Bonus x${multiplier} aktywny (${timeLeft}s)`;
+    bonusTimer = setInterval(() => {
+      timeLeft--;
+      if (timeLeft > 0) {
+        timerSpan.textContent = `Bonus x${multiplier} (${timeLeft}s)`;
+      } else {
+        clearInterval(bonusTimer);
+        timerSpan.textContent = "Bonus wygasł";
+        activeBonus = 1; // reset mnożnika po czasie
+        updateBonusDisplay();
+      }
+    }, 1000);
+    updateBonusDisplay();
+
+  } else if (item.effect === "auto") {
+    if (autoClickInterval) clearInterval(autoClickInterval);
+    let timeLeft = item.duration / 1000;
+    timerSpan.textContent = `Auto klikanie (${timeLeft}s)`;
+    autoClickInterval = setInterval(() => {
+      boxMandaty += 1 * (activeBonus + crownBonus);
+      globalMandaty += 1 * (activeBonus + crownBonus);
+      updateCounters();
+      saveData();
+      timeLeft--;
+      if (timeLeft > 0) timerSpan.textContent = `Auto klikanie (${timeLeft}s)`;
+      else {
+        clearInterval(autoClickInterval);
+        timerSpan.textContent = "Auto klik wygasł";
+      }
+    }, 1000);
+
+  } else if (item.effect === "permanent") {
+    if (hasCrown) return alert("Masz już koronę Parkietu!");
+    hasCrown = true;
+    crownBonus = 1;
+    localStorage.setItem("hasCrown", "true");
+    alert("Korona Parkietu aktywna! Stały bonus +1 MZ do każdego kliknięcia!");
+    updateBonusDisplay();
+  }
+}
+
+/* --- Kliknięcie z bonusami --- */
+mandatBox.addEventListener('click', () => {
+  const bonus = activeBonus + crownBonus;
+  boxMandaty += bonus;
+  globalMandaty += bonus;
+  updateCounters();
+  addPointsToCitizen(bonus);
+  saveData();
+});
+
+/* --- Pomocnicza funkcja --- */
+function updateBonusDisplay() {
+  const bonusDisplay = document.getElementById("bonusInfo");
+  if (!bonusDisplay) return;
+  if (activeBonus > 1)
+    bonusDisplay.textContent = `🔥 Aktywny bonus: x${activeBonus} (${crownBonus ? "+ korona" : ""})`;
+  else if (crownBonus)
+    bonusDisplay.textContent = `👑 Stały bonus korony: +1 MZ`;
+  else
+    bonusDisplay.textContent = `Brak aktywnego bonusu`;
+}
+
+/* --- Start sklepu --- */
+renderShop();
+updateBonusDisplay();
   shopDiv.innerHTML="";
   shopItems.forEach((item,i)=>{
     const div=document.createElement('div');
@@ -262,4 +364,5 @@ renderShop();
 </script>
 </body>
 </html>
+
 
