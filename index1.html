@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Discopolia – Państwo Zenka</title>
 <style>
-/* --- wygląd zgodny z Twoim klasycznym stylem --- */
+/* Twój klasyczny styl */
 body { margin:0; font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top, #25003a, #000); color:#fff; text-align:center; overflow-x:hidden; }
 header { background: linear-gradient(45deg, #ff00cc, #3333ff, #ffcc00); background-size:300% 300%; animation: gradientMove 6s ease infinite; padding:2rem; position:relative; box-shadow:0 0 20px #ff00cc; }
-@keyframes gradientMove { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes gradientMove { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
 header img { width:120px; position:absolute; top:10px; left:10px; }
 header h1 { font-size:3rem; margin:0; text-shadow:3px 3px 8px #000; }
 header p { font-size:1.2rem; margin-top:0.5rem; color:#ffeb99; }
@@ -21,8 +21,6 @@ h2 { color: #ffcc00; text-shadow: 0 0 10px #ffcc00; }
 
 #mandatBox { background: linear-gradient(135deg, #ff0099, #ff6600); border-radius:20px; padding:2rem; margin:1.5rem auto; max-width:300px; font-size:1.3rem; font-weight:bold; cursor:pointer; box-shadow:0 0 20px #ff00cc; transition: transform .2s, box-shadow .2s; }
 #mandatBox:hover { transform: scale(1.05); box-shadow: 0 0 30px #ffcc00; }
-
-.mapa { max-width:100%; border-radius:15px; box-shadow:0 0 20px #ffcc00; }
 
 #gameArea { position: relative; width:100%; max-width:500px; height:400px; margin:1rem auto; border:2px solid #ffcc00; border-radius:15px; background: radial-gradient(circle, #222 40%, #111 100%); overflow:hidden; }
 #zenek { position:absolute; width:80px; height:80px; cursor:pointer; display:none; }
@@ -38,7 +36,6 @@ th, td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.12); text-
 .shop-item { display:flex; justify-content:space-between; align-items:center; padding:8px; margin:8px 0; border-radius:8px; background: rgba(255,255,255,0.02); }
 .shop-item button { background:#ff0066; border:none; color:#fff; padding:6px 10px; border-radius:6px; cursor:pointer; }
 
-/* responsive */
 @media (max-width:700px){
   header h1{ font-size:22px; }
   #mandatBox{ width:90%; }
@@ -48,31 +45,28 @@ th, td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.12); text-
 </head>
 <body>
 <header>
-  <img src="herb.png" alt="Herb Discopolii">
+  <img src="herb.png" alt="Herb Discopolii (wstaw plik herb.png)">
   <div style="text-align:center">
     <h1>Discopolia</h1>
-    <p>Państwo Zenka Martyniuka – Mandaty Zenkowe (MZ)</p>
+    <p>Państwo Zenka Martyniuka — Mandaty Zenkowe (MZ)</p>
   </div>
 </header>
 
 <div id="totalMandatyBox">💰 Łącznie: <span id="totalMandaty">0</span> MZ</div>
 
 <main>
-  <!-- Klikacz -->
   <section>
     <h2>Mandaty Zenkowe</h2>
-    <div id="mandatBox">🎵 Kliknij, by zdobyć Mandaty!</div>
-    <p>Twoje (local) MZ: <strong><span id="localMandaty">0</span></strong></p>
-    <p id="bonusInfo" style="color:#00ffcc; font-weight:bold;">Brak aktywnego bonusu</p>
+    <div id="mandatBox">🎵 Kliknij, by zdobywać Mandaty Zenkowe!</div>
+    <p>Twoje (local) MZ: <span id="localMandaty">0</span></p>
+    <p id="bonusInfo" style="color:#00ffcc;font-weight:bold;">Brak aktywnego bonusu</p>
   </section>
 
-  <!-- Mapa -->
   <section>
     <h2>Mapa Discopolii</h2>
     <img src="mapa.png" alt="Mapa Discopolii" class="mapa">
   </section>
 
-  <!-- Gra -->
   <section>
     <h2>Minigierka: Złap Zenka!</h2>
     <div id="gameArea"><img id="zenek" src="zenek.png" alt="Zenek"></div>
@@ -80,7 +74,6 @@ th, td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.12); text-
     <button id="startGame" class="btn">Start!</button>
   </section>
 
-  <!-- Ranking -->
   <section id="ranking">
     <h2>Ranking Obywateli</h2>
     <div id="citizenSection">
@@ -99,7 +92,6 @@ th, td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.12); text-
     </table>
   </section>
 
-  <!-- Ustawy -->
   <section id="lawsSection">
     <h2>Ustawy Discopolii (koszt zgłoszenia: 500 MZ)</h2>
     <form id="addLawForm">
@@ -112,7 +104,6 @@ th, td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.12); text-
     <div id="approvedLaws"></div>
   </section>
 
-  <!-- Sklep -->
   <section id="shopSection">
     <h2>Sklep Zenka</h2>
     <div id="shopItems"></div>
@@ -120,27 +111,21 @@ th, td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.12); text-
 </main>
 
 <script>
-/* ======================
-   Discopolia - JSONBin global version
-   - Wklej BIN_ID i API_KEY poniżej
-   - Każdy może dodać 1 obywatela na urządzeniu (localCitizen)
-   - Ustawy: koszt zgłoszenia = 500 MZ (od danego obywatela)
-   ====================== */
-
-/* ====== KONFIG: Wklej swój BIN i KLUCZ ====== */
-const BIN_ID = "<<<690cda2aae596e708f48e8a1>>>";      // <<< TU WKLEJ BIN_ID
-const API_KEY = "<<<$2a$10$TzFrciZNJC0Uar/416.rnuhtMDVCQx/Qso3RRpHnoLMXYUeHJ5aR6>>>";    // <<< TU WKLEJ API_KEY
+/* ========== KONFIG: Wklej SWÓJ BIN_ID i API_KEY poniżej ========== */
+/* Znajdziesz je w panelu jsonbin.io (Create Bin -> ID, API Keys -> Master Key) */
+const BIN_ID = "<<<690cda2aae596e708f48e8a1>>>";
+const API_KEY = "<<<$2a$10$TzFrciZNJC0Uar/416.rnuhtMDVCQx/Qso3RRpHnoLMXYUeHJ5aR6>>>";
 const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-/* ====== Stan lokalny wygodny (lustrzany z globalnym) ====== */
+/* ========== STAN ========== */
 let state = {
   globalMandaty:0,
   citizens:[],
   laws:[],
   approvedLaws:[],
-  shopState: { hasCrown:false, activeBonuses:[] } // activeBonuses: [{id,type,multiplier,expiresAt,duration}]
+  shopState: { hasCrown:false, activeBonuses:[] } // activeBonuses: [{id,type,multiplier,expiresAt,duration,owner}]
 };
-let localBox = { localMandaty: 0 }; // minimalne local storage, mostly mirrored to citizen points
+let localBox = { localMandaty: parseInt(localStorage.getItem('localMandaty')) || 0 };
 
 /* DOM refs */
 const totalMandatyEl = document.getElementById('totalMandaty');
@@ -159,7 +144,7 @@ const gameArea = document.getElementById('gameArea');
 const scoreEl = document.getElementById('score');
 const startGameBtn = document.getElementById('startGame');
 
-/* --- Shop catalog (ids must match what we store globally) --- */
+/* shop catalog */
 const shopCatalog = [
   { id:'mic', title:'🎤 Złoty Mikrofon', price:50, type:'mult', multiplier:2, duration:30000 },
   { id:'drink', title:'🧃 Napój Disco-Energy', price:100, type:'auto', duration:30000 },
@@ -167,38 +152,49 @@ const shopCatalog = [
   { id:'crown', title:'👑 Korona Parkietu', price:1000, type:'perm' }
 ];
 
-/* ======= Pomocniki do JSONBin ======= */
+/* ===== JSONBin helpers ===== */
 async function loadGlobal(){
+  if(!BIN_ID || !API_KEY){
+    console.warn('BIN_ID/API_KEY not set — using local fallback only');
+    // try local fallback if exists
+    const fallback = localStorage.getItem('discopolia_localstate');
+    if(fallback) {
+      try { state = JSON.parse(fallback); } catch(e){ console.error(e); }
+    }
+    renderAll();
+    applyShopStateLocally();
+    return;
+  }
   try{
     const r = await fetch(API_URL, { headers: { "X-Master-Key": API_KEY }});
-    if(!r.ok) throw new Error(r.statusText);
+    if(!r.ok) throw new Error(await r.text());
     const json = await r.json();
-    // json.record zawiera Twój obiekt
     const rec = json.record || {};
-    state = {
-      globalMandaty: rec.globalMandaty || 0,
-      citizens: rec.citizens || [],
-      laws: rec.laws || [],
-      approvedLaws: rec.approvedLaws || [],
-      shopState: rec.shopState || { hasCrown:false, activeBonuses:[] }
-    };
-    // localBox pull from localStorage (we keep box on device)
+    state.globalMandaty = rec.globalMandaty || 0;
+    state.citizens = rec.citizens || [];
+    state.laws = rec.laws || [];
+    state.approvedLaws = rec.approvedLaws || [];
+    state.shopState = rec.shopState || { hasCrown:false, activeBonuses:[] };
+    // local mirror
     localBox.localMandaty = parseInt(localStorage.getItem('localMandaty')) || 0;
     renderAll();
     applyShopStateLocally();
   }catch(e){
-    console.error("Błąd loadGlobal:", e);
-    // Jeśli fetch nie działa (np. nie wstawiono klucza), spróbuj z localStorage fallback
+    console.error('loadGlobal error:', e);
     const fallback = localStorage.getItem('discopolia_localstate');
     if(fallback){
-      try{ state = JSON.parse(fallback); }catch{}
-      localBox.localMandaty = parseInt(localStorage.getItem('localMandaty')) || 0;
+      try{ state = JSON.parse(fallback); }catch(e){ console.error(e); }
       renderAll();
     }
   }
 }
+
 async function saveGlobal(){
-  // kompresujemy state do jednego obiektu
+  if(!BIN_ID || !API_KEY){
+    // fallback: save local copy
+    localStorage.setItem('discopolia_localstate', JSON.stringify(state));
+    return;
+  }
   const obj = {
     globalMandaty: state.globalMandaty || 0,
     citizens: state.citizens || [],
@@ -207,34 +203,27 @@ async function saveGlobal(){
     shopState: state.shopState || { hasCrown:false, activeBonuses:[] }
   };
   try{
-    await fetch(API_URL, {
-      method: "PUT",
-      headers: {
-        "Content-Type":"application/json",
-        "X-Master-Key": API_KEY
-      },
+    const r = await fetch(API_URL, {
+      method: 'PUT',
+      headers: { "Content-Type":"application/json", "X-Master-Key": API_KEY },
       body: JSON.stringify(obj)
     });
+    if(!r.ok) throw new Error(await r.text());
   }catch(e){
-    console.error("Błąd saveGlobal:", e);
-    // zapisz kopię lokalną
+    console.error('saveGlobal error:', e);
     localStorage.setItem('discopolia_localstate', JSON.stringify(obj));
   }
 }
 
-/* Utility: modify with read-modify-write pattern */
+/* Read-modify-write helper to avoid race */
 async function modifyAndSave(modifier){
-  // pobierz najnowsze
-  await loadGlobal();
-  // pozwól modyfikować
-  modifier(state);
-  // zapisz
-  await saveGlobal();
-  // odśwież
-  await loadGlobal();
+  await loadGlobal();         // get freshest
+  await modifier(state);      // mutate
+  await saveGlobal();         // put back
+  await loadGlobal();         // refresh local copy
 }
 
-/* ======= UI Render ======= */
+/* ===== Rendering ===== */
 function renderAll(){
   totalMandatyEl.textContent = state.globalMandaty || 0;
   localMandatyEl.textContent = localBox.localMandaty || 0;
@@ -246,113 +235,115 @@ function renderAll(){
   updateBonusInfo();
 }
 
-/* Citizens */
 function renderCitizens(){
-  citizenTable.innerHTML = "";
-  const arr = (state.citizens || []).slice().sort((a,b)=>(b.points||0)-(a.points||0));
+  citizenTable.innerHTML = '';
+  const arr = (state.citizens||[]).slice().sort((a,b)=>(b.points||0)-(a.points||0));
   arr.forEach(c=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${escapeHtml(c.name)}</td><td>${escapeHtml(c.title)}</td><td>${c.points||0}</td>`;
     citizenTable.appendChild(tr);
   });
 }
+
 function renderLocalCitizenInfo(){
   const local = JSON.parse(localStorage.getItem('localCitizen') || "null");
-  if(local){
-    localCitizenInfo.textContent = `Jesteś zalogowany jako ${local.title} ${local.name}`;
-  } else {
-    localCitizenInfo.textContent = 'Nie jesteś jeszcze obywatelem Discopolii.';
-  }
+  localCitizenInfo.textContent = local ? `Jesteś zalogowany jako ${local.title} ${local.name}` : 'Nie jesteś obywatelem Discopolii.';
 }
 
 /* Laws */
 function renderLaws(){
-  lawsList.innerHTML = "";
+  lawsList.innerHTML = '';
   (state.laws||[]).forEach(l=>{
     const div = document.createElement('div'); div.className='law';
     div.innerHTML = `<strong>${escapeHtml(l.name)}</strong> (${l.votes||0}/${l.required} MZ)<br>${escapeHtml(l.desc)}<br>
       <input type="number" min="1" placeholder="Ile MZ?" id="donate_${l.id}">
-      <button data-law="${l.id}" class="btn">Przekaż mandaty</button>`;
+      <button class="btn" data-law="${l.id}">Przekaż mandaty</button>`;
     div.querySelector('button').addEventListener('click', async ()=>{
       const amt = parseInt(document.getElementById('donate_'+l.id).value);
-      if(!amt) return alert("Podaj ilość mandatów!");
+      if(!amt) return alert('Podaj ilość mandatów!');
       const local = JSON.parse(localStorage.getItem('localCitizen') || "null");
-      if(!local) return alert("Musisz być obywatelem, by przekazać mandaty!");
-      // check local citizen points in global state
-      const gCitizen = (state.citizens||[]).find(c=>c.name===local.name);
-      if(!gCitizen || (gCitizen.points||0) < amt) return alert("Nie masz tylu mandatów (globalnie)!");
-      // perform vote: deduct from citizen, deduct from globalMandaty, add to law.votes; move if needed
+      if(!local) return alert('Musisz być obywatelem, by przekazać mandaty!');
+      // check that citizen has enough global points
+      const g = state.citizens.find(c=>c.name===local.name);
+      if(!g || (g.points||0) < amt) return alert('Nie masz tylu mandatów (globalnie).');
       await modifyAndSave(s=>{
         const c = s.citizens.find(x=>x.name===local.name);
-        c.points -= amt;
+        if(c) c.points = Math.max(0, (c.points||0) - amt);
         s.globalMandaty = Math.max(0, (s.globalMandaty||0) - amt);
         const law = s.laws.find(x=>x.id===l.id);
-        if(law){ law.votes = (law.votes||0) + amt; if(law.votes >= law.required){ s.approvedLaws.push(law); s.laws = s.laws.filter(x=>x.id!==l.id); } }
+        if(law){
+          law.votes = (law.votes||0) + amt;
+          if(law.votes >= law.required){
+            s.approvedLaws.push(law);
+            s.laws = s.laws.filter(x=>x.id!==l.id);
+          }
+        }
       });
+      alert('Mandaty przekazane!');
     });
     lawsList.appendChild(div);
   });
 }
+
 function renderApproved(){
-  approvedList.innerHTML = "";
+  approvedList.innerHTML = '';
   (state.approvedLaws||[]).forEach(a=>{
-    const d=document.createElement('div'); d.className='law';
+    const d = document.createElement('div'); d.className='law';
     d.innerHTML = `<strong>${escapeHtml(a.name)}</strong> (${a.votes||0} MZ)<br>${escapeHtml(a.desc)}`;
     approvedList.appendChild(d);
   });
 }
 
-/* Shop render */
+/* Shop */
 function renderShop(){
-  shopItemsDiv.innerHTML = "";
+  shopItemsDiv.innerHTML = '';
   const now = Date.now();
   shopCatalog.forEach(item=>{
     const div = document.createElement('div'); div.className='shop-item';
     const active = (state.shopState.activeBonuses||[]).find(b=>b.id===item.id && b.expiresAt > now);
     const owned = state.shopState.hasCrown && item.id==='crown';
-    div.innerHTML = `<div><strong>${item.title}</strong><br><small>${item.type==='mult' ? `x${item.multiplier} na ${item.duration/1000}s` : item.type==='auto' ? `auto ${item.duration/1000}s` : 'stały bonus'}</small></div>`;
+    const left = document.createElement('div');
+    left.innerHTML = `<strong>${item.title}</strong><br><small>${item.type==='mult' ? `x${item.multiplier} — ${item.duration/1000}s` : item.type==='auto' ? `auto ${item.duration/1000}s` : 'stały bonus'}</small>`;
     const right = document.createElement('div');
-    const priceSpan = document.createElement('span'); priceSpan.textContent = item.price + " MZ"; priceSpan.style.marginRight = '10px';
-    right.appendChild(priceSpan);
+    const price = document.createElement('span'); price.textContent = item.price + ' MZ'; price.style.marginRight='8px';
+    right.appendChild(price);
     const btn = document.createElement('button'); btn.textContent = owned ? 'Kupione' : 'Kup';
     if(owned) btn.disabled = true;
-    // disable if local citizen doesn't have enough points
+    // check local citizen global points
     const local = JSON.parse(localStorage.getItem('localCitizen') || "null");
     let localPoints = 0;
-    if(local){ const g = (state.citizens||[]).find(c=>c.name===local.name); if(g) localPoints = g.points||0; }
+    if(local){ const g = state.citizens.find(c=>c.name===local.name); if(g) localPoints = g.points||0; }
     if(localPoints < item.price) btn.disabled = true;
     btn.addEventListener('click', async ()=>{
-      if(!local) return alert('Musisz być obywatelem, by kupić w sklepie!');
-      if(localPoints < item.price) return alert('Twoje punkty (globalnie) są za małe na ten zakup!');
-      // perform buy: deduct from citizen.points and state.globalMandaty, add to shopState
+      if(!local) return alert('Musisz być obywatelem, by kupić.');
+      if(localPoints < item.price) return alert('Nie masz wystarczająco mandatów (globalnie).');
       await modifyAndSave(s=>{
-        const citizen = s.citizens.find(c=>c.name===local.name);
-        citizen.points -= item.price;
+        const c = s.citizens.find(x=>x.name===local.name);
+        if(c) c.points = Math.max(0, (c.points||0) - item.price);
         s.globalMandaty = Math.max(0, (s.globalMandaty||0) - item.price);
-        if(item.type === 'perm' && item.id === 'crown'){ s.shopState.hasCrown = true; }
-        else {
-          // push/replace bonus
+        if(item.type === 'perm' && item.id === 'crown'){
+          s.shopState.hasCrown = true;
+        } else {
           s.shopState.activeBonuses = (s.shopState.activeBonuses||[]).filter(b=>b.id!==item.id);
-          s.shopState.activeBonuses.push({ id: item.id, type: item.type, multiplier: item.multiplier, expiresAt: Date.now() + item.duration, duration: item.duration });
+          s.shopState.activeBonuses.push({ id: item.id, type: item.type, multiplier: item.multiplier, expiresAt: Date.now() + item.duration, duration: item.duration, owner: local.name });
         }
       });
-      // reload state & local apply
       await loadGlobal();
       applyShopStateLocally();
-      alert(item.title + " kupione!");
+      alert(item.title + ' kupione!');
     });
     right.appendChild(btn);
     if(active){
-      const rem = Math.max(0, Math.ceil((active.expiresAt - now)/1000));
-      const span = document.createElement('span'); span.style.marginLeft='8px'; span.style.color='#0ff';
-      span.textContent = `Aktywny: ${rem}s`; right.appendChild(span);
+      const rem = Math.max(0, Math.ceil((active.expiresAt - now) / 1000));
+      const span = document.createElement('span'); span.style.color='#00ffcc'; span.style.marginLeft='8px'; span.textContent = `Aktywny: ${rem}s`;
+      right.appendChild(span);
     }
-    div.appendChild(right);
+    div.appendChild(left); div.appendChild(right);
     shopItemsDiv.appendChild(div);
   });
 }
 
-/* compute click value from global shopState multipliers and crown */
+/* compute click value from global shopState */
 function computeClickValue(){
   let base = 1;
   const now = Date.now();
@@ -362,102 +353,55 @@ function computeClickValue(){
   return Math.floor(base * mult + crown);
 }
 
-/* Apply shop state locally: auto-click and UI timers */
+/* Apply shop state locally:
+   - start auto-click only for bonuses owned by local citizen (owner === local.name)
+   - update UI countdowns (renderShop called periodically)
+*/
 let localAutoInterval = null;
-let shopRefreshInterval = null;
+let shopCountdownInterval = null;
 function applyShopStateLocally(){
-  // clear existing auto
   if(localAutoInterval){ clearInterval(localAutoInterval); localAutoInterval = null; }
-  const now = Date.now();
-  const hasAuto = (state.shopState.activeBonuses||[]).some(b=>b.type==='auto' && b.expiresAt > now);
-  if(hasAuto){
-    // each client will locally perform auto-clicks (1s)
-    localAutoInterval = setInterval(async ()=>{
-      // compute value at click time
-      const val = computeClickValue();
-      // apply locally and globally (modify citizen points and globalMandaty)
-      const local = JSON.parse(localStorage.getItem('localCitizen') || "null");
-      if(!local) return;
-      await modifyAndSave(s=>{
-        s.globalMandaty = (s.globalMandaty || 0) + val;
-        const c = s.citizens.find(x=>x.name===local.name);
-        if(c) c.points = (c.points||0) + val;
-      });
-      // refresh UI
-      await loadGlobal();
-    }, 1000);
+  const local = JSON.parse(localStorage.getItem('localCitizen') || "null");
+  if(local){
+    const now = Date.now();
+    const myAuto = (state.shopState.activeBonuses||[]).find(b=>b.type==='auto' && b.expiresAt > now && b.owner === local.name);
+    if(myAuto){
+      localAutoInterval = setInterval(async ()=>{
+        const val = computeClickValue();
+        // increment only for this citizen: use modifyAndSave to push to global
+        await modifyAndSave(s=>{
+          s.globalMandaty = (s.globalMandaty || 0) + val;
+          const c = s.citizens.find(x=>x.name===local.name);
+          if(c) c.points = (c.points || 0) + val;
+        });
+      }, 1000);
+    }
   }
-  // interval to update shop UI countdowns
-  if(shopRefreshInterval) clearInterval(shopRefreshInterval);
-  shopRefreshInterval = setInterval(()=> renderShop(), 900);
+  if(shopCountdownInterval) clearInterval(shopCountdownInterval);
+  shopCountdownInterval = setInterval(()=> renderShop(), 900);
 }
 
-/* ====== Click handlers ====== */
+/* ===== Clickers & Game ===== */
 /* main click */
 mandatBox.addEventListener('click', async ()=>{
   const local = JSON.parse(localStorage.getItem('localCitizen') || "null");
   if(!local) return alert('Najpierw zostań obywatelem Discopolii!');
   const val = computeClickValue();
-  // local update: increase citizen points server-side
   await modifyAndSave(s=>{
-    s.globalMandaty = (s.globalMandaty||0) + val;
+    s.globalMandaty = (s.globalMandaty || 0) + val;
     const c = s.citizens.find(x=>x.name===local.name);
-    if(c) c.points = (c.points||0) + val;
+    if(c) c.points = (c.points || 0) + val;
   });
-  // update local copy and UI
-  await loadGlobal();
 });
 
-/* ====== Citizen add (one per device) ====== */
-citizenForm.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const name = document.getElementById('citizenName').value.trim();
-  const title = document.getElementById('citizenTitle').value;
-  if(!name) return;
-  if(localStorage.getItem('localCitizen')) return alert('Masz już obywatelstwo na tym urządzeniu (tylko jedno).');
-  // add to global if not exists
-  await modifyAndSave(s=>{
-    if(!s.citizens.find(c=>c.name===name)){
-      s.citizens.push({ name, title, points: 0 });
-    }
-  });
-  // set as local citizen
-  localStorage.setItem('localCitizen', JSON.stringify({ name, title }));
-  document.getElementById('citizenName').value = '';
-  await loadGlobal();
-});
-
-/* ====== Add law (cost fixed 500 MZ) ====== */
-addLawForm.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const name = document.getElementById('lawName').value.trim();
-  const desc = document.getElementById('lawDesc').value.trim();
-  if(!name || !desc) return;
-  const local = JSON.parse(localStorage.getItem('localCitizen') || "null");
-  if(!local) return alert('Musisz być obywatelem żeby zgłosić ustawę!');
-  // check local citizen has >=500 points (global)
-  const g = (state.citizens||[]).find(c=>c.name===local.name);
-  if(!g || (g.points || 0) < 500) return alert('Potrzebujesz 500 MZ (globalnie), by zaproponować ustawę.');
-  // push law and deduct 500 from citizen.points + globalMandaty
-  await modifyAndSave(s=>{
-    s.laws.push({ id:'law_'+Date.now(), name, desc, votes:0, required:500 });
-    const c = s.citizens.find(x=>x.name===local.name); if(c) c.points -= 500;
-    s.globalMandaty = Math.max(0, (s.globalMandaty||0) - 500);
-  });
-  document.getElementById('lawName').value = '';
-  document.getElementById('lawDesc').value = '';
-  await loadGlobal();
-});
-
-/* ====== Minigra: Zenek ====== */
+/* game: move zenek and clicks */
 let gameActive=false, moveInt, gameScore=0;
 function moveZenek(){
   const maxX = Math.max(0, gameArea.clientWidth - zenek.clientWidth);
   const maxY = Math.max(0, gameArea.clientHeight - zenek.clientHeight);
   const x = Math.random() * maxX;
   const y = Math.random() * maxY;
-  zenek.style.left = x + 'px';
-  zenek.style.top = y + 'px';
+  zenek.style.left = x + 'px'; zenek.style.top = y + 'px';
 }
 zenek.addEventListener('click', async ()=>{
   if(!gameActive) return;
@@ -466,44 +410,77 @@ zenek.addEventListener('click', async ()=>{
   if(!local) return;
   const val = computeClickValue();
   await modifyAndSave(s=>{
-    s.globalMandaty = (s.globalMandaty||0) + val;
-    const c = s.citizens.find(x=>x.name===local.name); if(c) c.points = (c.points||0) + val;
+    s.globalMandaty = (s.globalMandaty || 0) + val;
+    const c = s.citizens.find(x=>x.name===local.name);
+    if(c) c.points = (c.points || 0) + val;
   });
-  await loadGlobal();
   moveZenek();
 });
 startGameBtn.addEventListener('click', ()=>{
   const local = JSON.parse(localStorage.getItem('localCitizen') || "null");
   if(!local) return alert('Musisz być obywatelem, by grać!');
   if(gameActive) return;
-  gameActive = true; gameScore = 0; scoreEl.textContent = 'Wynik: 0'; zenek.style.display = 'block';
+  gameActive=true; gameScore=0; scoreEl.textContent='Wynik: 0'; zenek.style.display='block';
   moveZenek(); moveInt = setInterval(moveZenek, 900);
-  setTimeout(async ()=>{
-    clearInterval(moveInt); gameActive = false; zenek.style.display = 'none';
-    alert('Koniec gry! Wynik: ' + gameScore);
-  }, 15000);
+  setTimeout(()=>{ clearInterval(moveInt); gameActive=false; zenek.style.display='none'; alert('Koniec gry! Wynik: '+gameScore); }, 15000);
 });
 
-/* ====== Helpers ====== */
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+/* ===== Citizens & Laws forms ===== */
+citizenForm.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const name = document.getElementById('citizenName').value.trim();
+  const title = document.getElementById('citizenTitle').value;
+  if(!name) return;
+  if(localStorage.getItem('localCitizen')) return alert('Masz już obywatelstwo na tym urządzeniu.');
+  await modifyAndSave(s=>{
+    if(!s.citizens.find(c=>c.name===name)){
+      s.citizens.push({ name, title, points: 0 });
+    }
+  });
+  localStorage.setItem('localCitizen', JSON.stringify({ name, title }));
+  document.getElementById('citizenName').value = '';
+  await loadGlobal();
+});
+
+addLawForm.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const name = document.getElementById('lawName').value.trim();
+  const desc = document.getElementById('lawDesc').value.trim();
+  if(!name||!desc) return;
+  const local = JSON.parse(localStorage.getItem('localCitizen') || "null");
+  if(!local) return alert('Musisz być obywatelem żeby zgłosić ustawę!');
+  // check citizen has 500 global points
+  const g = state.citizens.find(c=>c.name===local.name);
+  if(!g || (g.points||0) < 500) return alert('Potrzebujesz 500 MZ (globalnie), by zaproponować ustawę.');
+  await modifyAndSave(s=>{
+    s.laws.push({ id:'law_'+Date.now(), name, desc, votes:0, required:500 });
+    const c = s.citizens.find(x=>x.name===local.name); if(c) c.points = Math.max(0, (c.points||0) - 500);
+    s.globalMandaty = Math.max(0, (s.globalMandaty||0) - 500);
+  });
+  document.getElementById('lawName').value=''; document.getElementById('lawDesc').value='';
+  await loadGlobal();
+});
+
+/* ===== Bonus info UI ===== */
 function updateBonusInfo(){
   const now = Date.now();
   let text = 'Brak aktywnego bonusu';
-  const activeMults = (state.shopState.activeBonuses||[]).filter(b=>b.type==='mult' && b.expiresAt > now);
-  if(activeMults.length) text = '🔥 Aktywne mnożniki: ' + activeMults.map(b=>'x'+b.multiplier).join(' × ');
+  const mults = (state.shopState.activeBonuses||[]).filter(b=>b.type==='mult' && b.expiresAt > now);
+  if(mults.length) text = '🔥 Aktywne mnożniki: ' + mults.map(b=>'x'+b.multiplier).join(' × ');
   if(state.shopState.hasCrown) text += (text==='Brak aktywnego bonusu' ? '👑 Korona: +1/klik' : ' + 👑 korona');
   bonusInfo.textContent = text;
 }
 
-/* ====== Init & polling ====== */
+/* ===== Utilities ===== */
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+/* ===== Init & polling ===== */
 (async function init(){
-  // load local box
   localBox.localMandaty = parseInt(localStorage.getItem('localMandaty')) || 0;
   await loadGlobal();
-  // poll every 5s to see others' changes
-  setInterval(loadGlobal, 5000);
+  setInterval(loadGlobal, 5000);         // polling to see other users' changes
+  setInterval(()=> { localMandatyEl.textContent = localBox.localMandaty; updateBonusInfo(); }, 900);
 })();
-
 </script>
 </body>
 </html>
