@@ -1,170 +1,264 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Discopolia Online 🌐</title>
-  <style>
-    body { margin:0; font-family:'Arial',sans-serif; background:#111; color:#fff; text-align:center;}
-    header { background:linear-gradient(45deg,#ff0066,#ffcc00,#00ffcc); padding:2rem; animation:gradientShift 5s ease infinite; background-size:300% 300%;}
-    header h1 { margin:0; font-size:3rem; text-shadow:2px 2px 5px #000;}
-    header p { font-size:1.2rem; text-shadow:1px 1px 3px #000;}
-    @keyframes gradientShift {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-    main { max-width:900px; margin:2rem auto; padding:0 1rem;}
-    section { background:rgba(255,255,255,0.05); padding:2rem; margin-bottom:2rem; border-radius:15px; box-shadow:0 0 15px #ff0066;}
-    h2 { color:#ffcc00; text-shadow:1px 1px 5px #000;}
-    .mandaty { background:#ff0066; padding:1rem; border-radius:10px; font-weight:bold; cursor:pointer; margin:1rem 0; box-shadow:0 0 10px #ff0066; transition:0.2s;}
-    .mandaty:hover { transform:scale(1.1);}
-    .btn { background:#ff0066; border:none; color:#fff; padding:10px 20px; border-radius:10px; cursor:pointer; box-shadow:0 0 10px #ff0066; transition:0.3s;}
-    .btn:hover { background:#ffcc00; color:#111;}
-    input { padding:6px; border-radius:6px; border:none; margin:0 5px;}
-    .law { background:rgba(255,255,255,0.05); margin:0.5rem 0; padding:0.5rem; border-radius:8px; text-align:left;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discopolia – Państwo Zenka</title>
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #25003a, #000);
+  color: #fff;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+header {
+  background: linear-gradient(45deg, #ff00cc, #3333ff, #ffcc00);
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+  padding: 2rem;
+  position: relative;
+  box-shadow: 0 0 20px #ff00cc;
+}
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+header img {
+  width: 120px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+header h1 {
+  font-size: 3rem;
+  margin: 0;
+  text-shadow: 3px 3px 8px #000;
+}
+
+header p {
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+  color: #ffeb99;
+}
+
+#totalMandatyBox {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 0, 204, 0.8);
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #ff00cc;
+  font-weight: bold;
+  font-size: 1.1rem;
+  z-index: 9999;
+}
+
+main {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+section {
+  background: rgba(255,255,255,0.05);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #ff00cc;
+}
+
+h2 {
+  color: #ffcc00;
+  text-shadow: 0 0 10px #ffcc00;
+}
+
+/* Klikacz */
+#mandatBox {
+  background: linear-gradient(135deg, #ff0099, #ff6600);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 1.5rem auto;
+  max-width: 300px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 20px #ff00cc;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+#mandatBox:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px #ffcc00;
+}
+
+/* Minigra */
+#gameArea {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 400px;
+  margin: 1rem auto;
+  border: 2px solid #ffcc00;
+  border-radius: 15px;
+  background: radial-gradient(circle, #222 40%, #111 100%);
+  overflow: hidden;
+}
+
+#zenek {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  display: none;
+}
+
+#score {
+  font-size: 1.3rem;
+  color: #00ffcc;
+}
+
+/* Sklep */
+.shop-item {
+  background: rgba(255,255,255,0.05);
+  margin: 0.5rem 0;
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 0 10px #ff00cc;
+}
+.shop-item button {
+  background: #ff0066;
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.shop-item button:hover { background: #ffcc00; color: #111; }
+
+/* Bonus licznik */
+#bonusTimer {
+  margin-top: 1rem;
+  color: #00ffcc;
+  font-weight: bold;
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Discopolia Online</h1>
-    <p>Globalne Mandaty Zenkowe 🎶</p>
-  </header>
+<header>
+  <img src="herb.png" alt="Herb Discopolii">
+  <h1>Witamy w Discopolii!</h1>
+  <p>Państwo Zenka Martyniuka – gdzie każda noc to koncert!</p>
+</header>
 
-  <main>
-    <section>
-      <h2>💸 Mandaty</h2>
-      <div id="mandatBox" class="mandaty">Kliknij, aby zdobyć mandat!</div>
-      <p>Twoje mandaty: <span id="mandatCount">0</span> MZ</p>
-      <p id="bonusInfo" style="color:#00ffcc; font-weight:bold;">Brak aktywnego bonusu</p>
-      <p>🌍 Globalne mandaty: <span id="globalCount">0</span> MZ</p>
-    </section>
+<div id="totalMandatyBox">💰 Łącznie Mandatów: <span id="totalMandaty">0</span> MZ</div>
 
-    <section>
-      <h2>🏛️ Obywatelstwo</h2>
-      <input id="citizenName" placeholder="Twoje imię">
-      <button id="joinBtn" class="btn">Zostań obywatelem</button>
-      <div id="citizensList"></div>
-    </section>
+<main>
+<section>
+  <h2>Mandaty Zenkowe</h2>
+  <div id="mandatBox">🎵 Kliknij, by zdobywać Mandaty Zenkowe!</div>
+</section>
 
-    <section>
-      <h2>📜 Ustawy</h2>
-      <input id="lawName" placeholder="Nazwa ustawy">
-      <input id="lawDesc" placeholder="Opis">
-      <button id="addLawBtn" class="btn">Zaproponuj (500 MZ)</button>
-      <div id="lawsList"></div>
-    </section>
-  </main>
+<section>
+  <h2>Sklep z ulepszeniami</h2>
+  <div id="shop"></div>
+  <p id="bonusTimer">Brak aktywnego bonusu</p>
+</section>
 
-  <script>
-    /* === KONFIGURACJA JSONBIN === */
-    const BIN_ID = "690e10aaae596e708f4abee6";
-    const API_KEY = "$2a$10$TzFrciZNJC0Uar/416.rnuhtMDVCQx/Qso3RRpHnoLMXYUeHJ5aR6 ";
-    const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+<section>
+  <h2>Minigierka: Złap Zenka!</h2>
+  <div id="gameArea">
+    <img id="zenek" src="zenek.png" alt="Zenek">
+  </div>
+  <p id="score">Wynik: 0</p>
+  <button class="btn" id="startGame">Start!</button>
+</section>
+</main>
 
-    /* === FUNKCJE JSONBIN === */
-    async function loadBin() {
-      const res = await fetch(BIN_URL, { headers: { "X-Master-Key": API_KEY }});
-      const data = await res.json();
-      return data.record;
+<script>
+let citizens=[], currentCitizen=null, bonusTime=0, bonusActive=false, bonusInterval;
+let totalMandaty=0, clickValue=1;
+
+const totalMandatyDisplay=document.getElementById('totalMandaty');
+const mandatBox=document.getElementById('mandatBox');
+const shopDiv=document.getElementById('shop');
+const bonusTimer=document.getElementById('bonusTimer');
+
+/* Sklep z ulepszeniami */
+const shopItems=[
+  {name:"Złoty Mikrofon", desc:"Kliknięcia dają +1 mandat", cost:50, effect:()=>clickValue++},
+  {name:"Zenkołajka", desc:"Zwiększa zarobek o 50% przez 1 minutę", cost:100, effect:()=>activateBonus(60,1.5)},
+  {name:"Zenkomobil", desc:"Podwaja zarobek z kliknięć na 2 minuty", cost:300, effect:()=>activateBonus(120,2)},
+  {name:"Korona Króla Parkietu", desc:"Potraja zarobek z kliknięć przez 5 minut", cost:800, effect:()=>activateBonus(300,3)},
+];
+
+/* Wyświetlanie sklepu */
+function renderShop(){
+  shopDiv.innerHTML="";
+  shopItems.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.className="shop-item";
+    div.innerHTML=`<div><strong>${item.name}</strong><br>${item.desc}<br><small>${item.cost} MZ</small></div>
+                   <button>Kup</button>`;
+    div.querySelector("button").addEventListener("click",()=>{
+      if(totalMandaty<item.cost){ alert("Za mało mandatów!"); return; }
+      totalMandaty-=item.cost;
+      totalMandatyDisplay.textContent=totalMandaty;
+      item.effect();
+      alert("Kupiono: "+item.name);
+      saveData();
+    });
+    shopDiv.appendChild(div);
+  });
+}
+
+/* Klikanie */
+mandatBox.addEventListener("click",()=>{
+  totalMandaty+=clickValue;
+  totalMandatyDisplay.textContent=totalMandaty;
+  saveData();
+});
+
+/* Bonus czasowy */
+function activateBonus(duration, multiplier){
+  if(bonusActive) return alert("Bonus już aktywny!");
+  bonusActive=true;
+  const oldClick=clickValue;
+  clickValue*=multiplier;
+  bonusTime=duration;
+  bonusTimer.textContent="Bonus aktywny przez "+bonusTime+"s";
+  bonusInterval=setInterval(()=>{
+    bonusTime--;
+    bonusTimer.textContent="Bonus aktywny przez "+bonusTime+"s";
+    if(bonusTime<=0){
+      clearInterval(bonusInterval);
+      bonusActive=false;
+      clickValue=oldClick;
+      bonusTimer.textContent="Brak aktywnego bonusu";
     }
+  },1000);
+}
 
-    async function saveBin(data) {
-      await fetch(BIN_URL, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
-        body: JSON.stringify(data)
-      });
-    }
-
-    async function modifyBin(fn) {
-      const state = await loadBin();
-      await fn(state);
-      await saveBin(state);
-      return await loadBin();
-    }
-
-    /* === ZMIENNE === */
-    let localMandaty = 0;
-    const mandatBox = document.getElementById("mandatBox");
-    const localCount = document.getElementById("mandatCount");
-    const globalCount = document.getElementById("globalCount");
-
-    /* === FUNKCJE MANDATÓW === */
-    async function addMandaty(amount) {
-      localMandaty += amount;
-      localCount.textContent = localMandaty;
-
-      await modifyBin(s => {
-        s.globalMandaty = (s.globalMandaty || 0) + amount;
-      });
-      await updateGlobal();
-    }
-
-    async function updateGlobal() {
-      const s = await loadBin();
-      globalCount.textContent = s.globalMandaty || 0;
-      renderCitizens(s.citizens);
-      renderLaws(s.laws);
-    }
-
-    mandatBox.onclick = () => addMandaty(1);
-
-    /* === OBYWATELE === */
-    const joinBtn = document.getElementById("joinBtn");
-    const citizenInput = document.getElementById("citizenName");
-    const citizensList = document.getElementById("citizensList");
-
-    joinBtn.onclick = async () => {
-      const name = citizenInput.value.trim();
-      if (!name) return alert("Podaj imię!");
-      await modifyBin(s => {
-        s.citizens = s.citizens || [];
-        if (!s.citizens.find(c => c.name === name)) s.citizens.push({ name, score: 0 });
-      });
-      updateGlobal();
-    };
-
-    function renderCitizens(list = []) {
-      citizensList.innerHTML = "<h3>Obywatele:</h3>" + list.map(c => `${c.name} (${c.score} MZ)`).join("<br>");
-    }
-
-    /* === USTAWY === */
-    const lawName = document.getElementById("lawName");
-    const lawDesc = document.getElementById("lawDesc");
-    const addLawBtn = document.getElementById("addLawBtn");
-    const lawsList = document.getElementById("lawsList");
-
-    addLawBtn.onclick = async () => {
-      if (localMandaty < 500) return alert("Potrzebujesz 500 MZ!");
-      const name = lawName.value.trim();
-      const desc = lawDesc.value.trim();
-      if (!name || !desc) return alert("Uzupełnij nazwę i opis!");
-      localMandaty -= 500;
-      localCount.textContent = localMandaty;
-
-      await modifyBin(s => {
-        s.laws = s.laws || [];
-        s.laws.push({ id: "law_" + Date.now(), name, desc, votes: 0 });
-        s.globalMandaty -= 500;
-      });
-      updateGlobal();
-    };
-
-    async function voteLaw(id) {
-      await modifyBin(s => {
-        const l = s.laws.find(x => x.id === id);
-        if (l) l.votes += 1;
-      });
-      updateGlobal();
-    }
-
-    function renderLaws(list = []) {
-      lawsList.innerHTML = list.map(l => `
-        <div class="law">
-          <strong>${l.name}</strong> (${l.votes} głosów)<br>${l.desc}<br>
-          <button onclick="voteLaw('${l.id}')">Głosuj</button>
-        </div>`).join("");
-    }
-
-    /* === START === */
-    updateGlobal();
-  </script>
+/* Zapisywanie */
+function saveData(){
+  localStorage.setItem("totalMandaty",totalMandaty);
+  localStorage.setItem("clickValue",clickValue);
+}
+function loadData(){
+  totalMandaty=parseInt(localStorage.getItem("totalMandaty"))||0;
+  clickValue=parseInt(localStorage.getItem("clickValue"))||1;
+  totalMandatyDisplay.textContent=totalMandaty;
+}
+loadData();
+renderShop();
+</script>
 </body>
 </html>
-
